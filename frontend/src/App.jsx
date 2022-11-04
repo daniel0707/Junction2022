@@ -1,7 +1,8 @@
-import { useState } from 'react'
+import { useState, lazy, Suspense } from 'react'
 import './App.css'
-import GarbageCenterList from './components/GarbageCenterList'
 import GarbageForm from './components/GarbageForm'
+import LoadingPage from './components/LoadingPage';
+const GarbageCenterList = lazy(() => import('./components/GarbageCenterList.jsx'));
 
 function App() {
 
@@ -20,7 +21,9 @@ function App() {
   return (
     <div className="App">
       {formSubmitted
-        ? <GarbageCenterList>{garbageCenters}</GarbageCenterList>
+        ? (<Suspense fallback={<LoadingPage />}>
+          <GarbageCenterList>{garbageCenters}</GarbageCenterList>
+        </Suspense>)
         : <GarbageForm />
       }
     </div>
