@@ -1,8 +1,12 @@
 import Divider from "./Divider"
+import { useRef } from "react"
 
-export default function GarbageCenterCard({ name, address, deliveryPrice, eta, handleClick }) {
+export default function GarbageCenterCard({ name, address, deliveryPrice, eta, handleClick, selected }) {
 
-  return (<div className="columns-1 mb-5 border-2 rounded-lg border-gray-400 w-fit min-w-fit p-3 m-auto bg-white" onClick={handleClick}>
+  const containerDiv = useRef()
+  const borderStyle = selected ? 'border-sky-600' : 'border-gray-400'
+
+  return (<div ref={containerDiv} className={`min-w-[80%] columns-1 mb-5 border-2 rounded-lg ${borderStyle} w-fit p-3 m-auto bg-white`} onClick={handleClick}>
     <h1 className="mb-2 text-xl text-sky-600">{name}</h1>
     <Divider />
     <div className="flex place-items-center mb-2 mt-3">
