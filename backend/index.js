@@ -100,7 +100,9 @@ const find_price = async (rows, address) => {
       },
       dropoff: {
         location: {
-          formatted_address: `${row.address}, ${fix_postal_code(row.postal_code)} ${row.municipality}`,
+          formatted_address: `${row.address}, ${fix_postal_code(
+            row.postal_code
+          )} ${row.municipality}`,
         },
       },
     };
@@ -118,30 +120,33 @@ const find_price = async (rows, address) => {
 };
 
 app.post("/order/submit", async (req, res, next) => {
-  const dropoff_details = await get_recyclepoint_details(req.body.dropoff)
-  if (!dropoff_details){
-    throw "Could not find dropoff with that ID"
+  let dropoff_details = ""
+  try {
+    dropoff_details = await get_recyclepoint_details(req.body.dropoff);
+  } catch (error) {
+    next(error);
   }
-
- /* 
+  /* 
  req.body = { 
-  dropoff:{
+  pickup:{
     formatted_adress: "Street, postcode address"
   },
-  pickup: "recyclepoint_ID"
-  content:[
+  dropoff: "recyclepoint_ID"
+  contents:[
     {
       "count": 1,
       "description": material_name
       "identifier": material_code
-      "tags": [material_name]
+      "tags": ["alcohol"]
     }
   ]
  }
  */
   const dropoff = {
     location: {
-      formatted_address: `${dropoff_details.address}, ${fix_postal_code(dropoff_details.postal_code)} ${dropoff_details.municipality}`
+      formatted_address: `${dropoff_details.address}, ${fix_postal_code(
+        dropoff_details.postal_code
+      )} ${dropoff_details.municipality}`,
     },
     contact_details: {
       name: "John Wolt",
@@ -150,9 +155,7 @@ app.post("/order/submit", async (req, res, next) => {
     },
   };
   const pickup = {
-    location: {
-      formatted_address: req.body.pickup,
-    },
+    ...req.body.pickup,
     contact_details: {
       name: "John Wolt's wife",
       phone_number: "+358123456789",
@@ -177,33 +180,32 @@ app.post("/order/submit", async (req, res, next) => {
       },
     ],
   };
-  const payload = {...extras,"pickup":pickup,"dropoff":dropoff}
-  const wolt_order_resp = await wolt_order(payload)
-  console.log(wolt_order_resp.data)
-
+  const contents = req.body.contents
+  const payload = { ...extras, contents: contents,pickup: pickup, dropoff: dropoff };
+  wolt_order(payload).then(resp=>{
+    res.send(resp.data.tracking.url)
+  },
+  rej=>{
+    next(rej)
+  })
 });
 
-const wolt_order = async (body)=>{
+const wolt_order = (body) => {
   const order_url = `https://daas-public-api.development.dev.woltapi.com/merchants/${MERCHANT_ID}/delivery-order`;
   let req_config = {
     headers: {
       Authorization: `Bearer ${api_key}`,
     },
   };
-  return await axios.post(order_url,body,req_config)
-}
+  return axios.post(order_url, body, req_config)
+};
 
-const get_recyclepoint_details = async (id) =>{
+const get_recyclepoint_details = async (id) => {
   pool.connect();
-  pool.query(`SELECT * FROM recyclepoint WHERE recyclepoint.id=${id}`, [], (err, result) => {
-    if (err) {
-      console.log(err);
-      return []
-    } else {
-      return result.rows[0]
-    }
-  });
-}
+  const query_string = `SELECT * FROM recyclepoint WHERE recyclepoint.id=${id}`;
+  let db_res = await pool.query(query_string)
+  return db_res.rows[0]
+};
 //get_recyclepoint_details(1218666240)
 const baseGmapUrl = "https://maps.googleapis.com/maps/api/geocode/json?";
 const geocodeRequestConstuctor = (address) => {
@@ -214,17 +216,17 @@ const reverseGeocodeRequestConstructor = (coord) => {
   return `${baseGmapUrl}address=${coord.lat},${coord.lng}&key=${GMAP_TOKEN}`;
 };
 
-const fix_postal_code = (postal_code)=>{
-  if(`${postal_code}`.length==3){
-    return `00${postal_code}`
+const fix_postal_code = (postal_code) => {
+  if (`${postal_code}`.length == 3) {
+    return `00${postal_code}`;
   }
-  if(`${postal_code}`.length==4){
-    return `0${postal_code}`
+  if (`${postal_code}`.length == 4) {
+    return `0${postal_code}`;
   }
-  return `${postal_code}`
-}
+  return `${postal_code}`;
+};
 
-app.get("/gmapproxy/geocode", (req, res, next) => {
+app.post("/gmapproxy/geocode", (req, res, next) => {
   const address = req.body.address;
   axios.get(geocodeRequestConstuctor(address)).then(
     (gres) => {
@@ -238,22 +240,18 @@ app.get("/gmapproxy/geocode", (req, res, next) => {
   );
 });
 
-app.get("/gmapproxy/reversegeocode", (req, res, next) => {
+app.post("/gmapproxy/reversegeocode", (req, res, next) => {
+  console.log('Body', req.body)
   const coord = req.body.coord;
-  axios.get(reverseGeocodeRequestConstructor(coord)).then(
-    (gres) => {
-      console.log("Reverse geolocation ", gres.data);
-      const address = gres?.data?.results?.[0]?.formatted_address;
-      res.send({
-        address: address,
-        fullData: gres?.data?.results?.[0]?.address_components,
-      });
-    },
-    (err) => {
-      console.log("Reverse geolocation error ", err);
-    }
-  );
-});
+  console.log('Coords', coord);
+  axios.get(reverseGeocodeRequestConstructor(coord)).then((gres) =>{
+    console.log('Reverse geolocation ', gres.data);
+    const address = gres?.data?.results?.[0]?.formatted_address
+    res.send({address: address, fullData: gres?.data?.results?.[0]?.address_components});
+  }, (err) => {
+    console.log('Reverse geolocation error ', err);
+  })
+})
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
