@@ -17,7 +17,7 @@ export default function GarbageForm({ categories, onSubmit }) {
 
   const { register, handleSubmit, watch, formState: { errors } } = useForm()
 
-  console.log(watch("example")); // watch input value by passing the name of it
+  // console.log(watch("example")); // watch input value by passing the name of it
 
   let marker = null
 

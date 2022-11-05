@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { deliverToGarbageCenter } from "../API"
 import GarbageCenterCard from "./GarbageCenterCard"
 
 export default function GarbageCenterListPage(props) {
@@ -13,7 +14,8 @@ export default function GarbageCenterListPage(props) {
   const sendDeliveryRequest = () => {
 
     const ourGeoLoc = props.geoLoc
-    // TODO: use ourGeoLoc and selectedCardId to make the backend request
+    const orderSuccessUrl = deliverToGarbageCenter(selectedCardId, ourGeoLoc)
+    window.location.replace(orderSuccessUrl)
   }
 
   const submitButtonStyle = selectedCardId ? 'bg-sky-200 text-sky-600' : 'bg-gray-300 text-gray-400'
@@ -26,9 +28,9 @@ export default function GarbageCenterListPage(props) {
           {props.children.map(gc => {
             return <GarbageCenterCard
               key={gc.id}
-              name={gc.name}
+              name={gc.spot_name + ' (' + gc.municipality + ')'}
               address={gc.address}
-              deliveryPrice={gc.price}
+              deliveryPrice={gc.fee.amount}
               eta={gc.eta}
               selected={selectedCardId === gc.id ? true : false}
               handleClick={() => handleCardClick(gc.id)}

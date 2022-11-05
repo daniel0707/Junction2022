@@ -32,7 +32,7 @@ function App() {
   const handleFormSubmit = (data) => {
 
     setFormData(data)
-    console.log(data)
+    console.log('Form data: ' + data)
   }
 
   useEffect(() => {
@@ -44,15 +44,6 @@ function App() {
     }
     requestDelivery()
   }, [formData])
-
-  // causes infinite loop; figure it out
-  // useEffect(() => {
-  //   window.location.replace(orderSuccessUrl)
-  // }, [orderSuccessUrl])
-
-  const deliverToSelectedGarbageCenter = (gcId) => {
-    // TODO
-  }
 
   return (
     <div className="App bg-gray-200 w-full">

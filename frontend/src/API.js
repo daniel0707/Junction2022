@@ -12,11 +12,20 @@ export async function getCategories() {
   }
 }
 
-export async function getGarbageCenterList(formData) {
+export async function getGarbageCenterList(data) {
+
+  const options = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+  }
 
   try {
-    const response = await fetch(`${BASE_URL}` + 'garbage_centers')
-    return await response.json()
+    const response = await fetch(`${BASE_URL}` + 'order/find', options)
+    const json = await response.json()
+    return json.result
   } catch (error) {
     console.log(error)
   }
