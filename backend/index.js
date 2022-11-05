@@ -108,6 +108,7 @@ const find_price = async (rows, address) => {
       req_resp = await axios.post(fee_url, req_body, req_config);
       let tmp_row = row;
       row.fee = req_resp.data.fee;
+      row.estimate_minutes = req_resp.data.time_estimate_minutes;
       res_arr.push(tmp_row);
     } catch (err) {
       console.log(err);
@@ -116,7 +117,26 @@ const find_price = async (rows, address) => {
   return res_arr;
 };
 
-app.post("/order/submit", (req, res, next) => {});
+app.post("/order/submit", (req, res, next) => {
+  const pickup_location = req.body.pickup
+  const pickup = {location:pickup_location,
+  contact_details:{
+    "name": "John Wolt",
+    "phone_number":"+358456456456",
+    "send_tracking_link_sms": false
+  }}
+  const dropoff = {
+    "location": {
+      "formatted_address": req.body.dropoff
+    },
+    "contact_details": {
+      "name": "John Wolt's wife",
+      "phone_number": "+358123456789",
+      "send_tracking_link_sms": false
+    },
+    "comment": "Leave at the door, please"
+  }
+});
 
 
 const baseGmapUrl = 'https://maps.googleapis.com/maps/api/geocode/json?';

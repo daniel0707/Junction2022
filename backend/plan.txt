@@ -14,7 +14,11 @@ POST /order/find
 body{
     materials:[
         material_id,
-    ]
+    ],
+    pickup:
+    {street,
+    city,
+    postal_code}
 }
 
 resp:
@@ -34,7 +38,7 @@ resp:
         }
     ]
 }
-// can do 404 - no centre can handle this request
+// can do empty array response
 
 post /order/submit
 {
