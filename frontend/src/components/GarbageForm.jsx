@@ -26,9 +26,30 @@ export default function GarbageForm({ categories, onSubmit }) {
     return coord ? <Marker position={coord} /> : null;
   }
 
+  function SorttiStation({ selected, stationData, handleSelect }) {
+    const handleClick = () => {
+      handleSelect(stationData.id)
+    }
+    return (
+      //
+      <div className="my-1 bg-white text-black flex-row flex justify-between rounded" onClick={handleClick} style={{borderColor: selected ? '#5ef75e' : 'black', borderStyle: 'solid', borderWidth: 3+'px'}}>
+        <div className="flex flex-col items-start">
+          <p className="text-2xl">{stationData.spot_name}</p>
+          <p>{stationData.address}</p>
+        </div>
+        <div>
+          <div>{`${stationData.fee.amount} ${stationData.fee.currency}`}</div>
+        </div>
+      </div>
+    )
+  }
+
   const [coord, updateCoord] = useState(null);
   const [address, setAddress] = useState('');
   const [selecteedCategories, setCategories] = useState('');
+  const[selecteedStation, setStation] = useState(null);
+  const [stations, setStations] = useState([]);
+  //let stations = [];
 
   const updateAddress = (newAddreess) => {
     setAddress(newAddreess);
@@ -48,16 +69,30 @@ export default function GarbageForm({ categories, onSubmit }) {
   let marker = null
 
   const getWastePoints = () => {
+    console.log('Start request')
+    const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
-        fetch(baseurl + "ordere/find", { body: JSON.stringify({ materials: selecteedCategories,
-          coordinates:coord, 
-        address: address}), method: 'POST', headers: myHeaders })
-          .then(response => {
-            response.json().then(data => {
-              console.log('Server response', data)
-            })
-          })
-          .catch(error => console.log('error', error));
+    fetch(baseurl + "order/find", {
+      body: JSON.stringify({
+        materials: selecteedCategories,
+        coordinates: coord,
+        address: address
+      }), method: 'POST', headers: myHeaders
+    })
+      .then(response => {
+        response.json().then(data => {
+          console.log('Server response', data)
+          setStation(null);
+          setStations(data.result)
+        })
+      })
+      .catch(error => console.log('error', error));
+
+    console.log('post')
+  }
+
+  handleSubmit = () => {
+
   }
 
   return (
@@ -97,6 +132,8 @@ export default function GarbageForm({ categories, onSubmit }) {
         </div>
       </form>
       <button onClick={getWastePoints} className="w-2/5 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Check</button>
+    {stations.map(s => <SorttiStation key={s.id} selected={s.id === selecteedStation} handleSelect={setStation} stationData={s}/>)}
+    {selecteedStation ? <button onClick={handleSubmit}>Submit</button> : null}
     </div>
   )
 }
