@@ -1,5 +1,6 @@
 import { useForm } from "react-hook-form"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
+import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaflet'
 
 const GARBAGE_TYPE = {
   CAR_BATTERY: 'Car Battery',
@@ -8,6 +9,19 @@ const GARBAGE_TYPE = {
 }
 
 export default function GarbageForm({ categories, onSubmit }) {
+
+  function MyComponent() {
+    const [coord, updateCoord] = useState(null);
+    const map = useMapEvents({
+      click: (e) => {
+        updateCoord(e.latlng);
+        console.log(e.latlng);
+      }
+    })
+    return coord ? <Marker position={coord} /> : null;
+  }
+
+
 
   // TODO: get garbage types from server with useEffect
 
@@ -20,9 +34,30 @@ export default function GarbageForm({ categories, onSubmit }) {
 
   console.log(watch("example")); // watch input value by passing the name of it
 
+  let marker = null
+
+  const handleMapClick = (data) => {
+    console.log('Test');
+    console.log(data);
+  }
+
   return (
+
+
+
     /* "handleSubmit" will validate your inputs before invoking "onSubmit" */
     <form className="grid gap-6 mb-6 md:grid-cols-1 w-full" onSubmit={handleSubmit(onSubmit)}>
+
+      <MapContainer center={[60.1699, 24.9384]} zoom={13} scrollWheelZoom={false} style={{ height: 300 + 'px' }} onClick={handleMapClick}>
+        <TileLayer
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+        <MyComponent />
+        {marker}
+      </MapContainer>
+
+
       {/* register your input into the hook by invoking the "register" function */}
 
       <div className="grid">
