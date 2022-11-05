@@ -10,16 +10,17 @@ function App() {
 
   const geoLoc = { lat: '60.184737', lon: '24.833727' } // our location
 
-  const [garbageCategories, setGarbageCategories] = useState(null)
-
-  const [orderSuccessUrl, setOrderSuccessUrl] = useState(null)
-
-  useEffect(async () => {
-    const categories = await getCategories()
-    setGarbageCategories(categories)
-  }, [])
-
   const [formData, setFormData] = useState(null)
+  const [garbageCategories, setGarbageCategories] = useState([])
+  const [orderSuccessUrl, setOrderSuccessUrl] = useState('')
+
+  useEffect(() => {
+    const getCats = async function () {
+      const categories = await getCategories()
+      setGarbageCategories(categories)
+    }
+    getCats()
+  }, [])
 
   // objects with the same fields as GarbageCenterCard (except no handleClick method)
   const [garbageCenters, setGarbageCenters] = useState([])
@@ -44,13 +45,13 @@ function App() {
     requestDelivery()
   }, [formData])
 
-  useEffect(() => {
-    window.location.replace(orderSuccessUrl)
-  }, [orderSuccessUrl])
+  // causes infinite loop; figure it out
+  // useEffect(() => {
+  //   window.location.replace(orderSuccessUrl)
+  // }, [orderSuccessUrl])
 
   const deliverToSelectedGarbageCenter = (gcId) => {
-
-
+    // TODO
   }
 
   return (

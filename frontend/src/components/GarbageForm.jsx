@@ -2,12 +2,6 @@ import { useForm } from "react-hook-form"
 import { useEffect, useState } from "react"
 import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaflet'
 
-const GARBAGE_TYPE = {
-  CAR_BATTERY: 'Car Battery',
-  SOFA: 'Sofa',
-  FRIDGE: 'Fridge'
-}
-
 export default function GarbageForm({ categories, onSubmit }) {
 
   function MyComponent() {
@@ -21,16 +15,7 @@ export default function GarbageForm({ categories, onSubmit }) {
     return coord ? <Marker position={coord} /> : null;
   }
 
-
-
-  // TODO: get garbage types from server with useEffect
-
   const { register, handleSubmit, watch, formState: { errors } } = useForm()
-
-  /*
-  const onSubmit = (data) => {
-    console.log(data)
-  } */
 
   console.log(watch("example")); // watch input value by passing the name of it
 
@@ -42,9 +27,6 @@ export default function GarbageForm({ categories, onSubmit }) {
   }
 
   return (
-
-
-
     /* "handleSubmit" will validate your inputs before invoking "onSubmit" */
     <form className="grid gap-6 mb-6 md:grid-cols-1 w-full" onSubmit={handleSubmit(onSubmit)}>
 
@@ -82,7 +64,7 @@ export default function GarbageForm({ categories, onSubmit }) {
           <option value="SELECT">Select Garbage Type</option>
 
           {categories.map(item => {
-            return <option value="">{item.name_en}</option>
+            return <option key={item.id} value="">{item.name_en}</option>
           })}
         </select>
       </div>
