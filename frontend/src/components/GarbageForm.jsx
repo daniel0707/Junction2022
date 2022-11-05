@@ -39,6 +39,7 @@ export default function GarbageForm({ categories, onSubmit }) {
         </div>
         <div>
           <div>{`${stationData.fee.amount} ${stationData.fee.currency}`}</div>
+          <div>{`${stationData.distance.toFixed(2)}km`}</div>
         </div>
       </div>
     )
@@ -47,11 +48,14 @@ export default function GarbageForm({ categories, onSubmit }) {
   const [coord, updateCoord] = useState(null);
   const [address, setAddress] = useState('');
   const [selecteedCategories, setCategories] = useState('');
+  const [description, setDescription] = useState('');
   const[selecteedStation, setStation] = useState(null);
   const [stations, setStations] = useState([]);
   //let stations = [];
 
   const updateAddress = (newAddreess) => {
+    setStation(null)
+    setStations([])
     setAddress(newAddreess);
   }
 
@@ -91,8 +95,37 @@ export default function GarbageForm({ categories, onSubmit }) {
     console.log('post')
   }
 
-  handleSubmit = () => {
+  const handleDescription = (e) => {
+    setDescription(e.target.value);
+  }
 
+  const handleSubmit = () => {
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    fetch(baseurl + "order/submit", {
+      body: JSON.stringify({
+        dropoff: selecteedStation,
+        pickup: {
+          location:{
+            formatted_address: address
+          }
+        },
+        contents:[
+          {
+            count: 1,
+            description: description,
+            identifier: selecteedCategories,
+            tags: ['alcohol']
+          }
+        ]
+      }), method: 'POST', headers: myHeaders
+    })
+      .then(response => {
+        response.text().then(data => {
+          window.open(data, '_self')
+        })
+      })
+      .catch(error => console.log('error', error));
   }
 
   return (
@@ -128,7 +161,7 @@ export default function GarbageForm({ categories, onSubmit }) {
 
         <div className="grid items-center justify-center text-start">
           <label className="text-gray-900">Items description</label>
-          <textarea className="pl-1 border-gray-400 border-2 rounded-md" style={{ resize: 'none ' }} id="item_size" name="item_size" rows="4" cols="50" placeholder={'Describe the waste'}></textarea>
+          <textarea onChange={handleDescription} className="pl-1 border-gray-400 border-2 rounded-md" style={{ resize: 'none ' }} id="item_size" name="item_size" rows="4" cols="50" placeholder={'Describe the waste'}>{description}</textarea>
         </div>
       </form>
       <button onClick={getWastePoints} className="w-2/5 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Check</button>
