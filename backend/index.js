@@ -10,6 +10,11 @@ const port = process.env.PORT || 3000;
 const postgresqlUri = process.env.CONNECT_STR || "";
 const api_key = process.env.WOLT_TOKEN || "";
 const MERCHANT_ID = process.env.MERCHANT_ID || "";
+const GMAP_TOKEN = process.env.GMAP_TOKEN;
+
+if (!GMAP_TOKEN){
+  throw "No google map token"
+}
 
 if (postgresqlUri == "") {
   throw "You forgot to add postgresqlUri for database!";
@@ -113,9 +118,42 @@ const find_price = async (rows, address) => {
 
 app.post("/order/submit", (req, res, next) => {});
 
+
+const baseGmapUrl = 'https://maps.googleapis.com/maps/api/geocode/json?';
+const  geocodeRequestConstuctor = (address) => {
+  return `${baseGmapUrl}address=${encodeURI(address)}&key=${GMAP_TOKEN}`
+}
+
+const reverseGeocodeRequestConstructor = (coord) => {
+  return `${baseGmapUrl}address=${coord.lat},${coord.lng}&key=${GMAP_TOKEN}`
+}
+
+app.get("/gmapproxy/geocode", (req, res, next) => {
+  const address = req.body.address;
+  axios.get(geocodeRequestConstuctor(address)).then((gres)=>{
+    console.log('Geocode response', gres.data.results[0].geometry.location);
+    const lnglat = gres?.data?.results[0]?.geometry?.location
+    res.send({coord: lnglat});
+  }, (err)=>{
+    console.log('Geocodee error', err);
+  })
+})
+
+app.get("/gmapproxy/reversegeocode", (req, res, next) => {
+  const coord = req.body.coord;
+  axios.get(reverseGeocodeRequestConstructor(coord)).then((gres) =>{
+    console.log('Reverse geolocation ', gres.data);
+    const address = gres?.data?.results?.[0]?.formatted_address
+    res.send({address: address, fullData: gres?.data?.results?.[0]?.address_components});
+  }, (err) => {
+    console.log('Reverse geolocation error ', err);
+  })
+})
+
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
+
 
 app.listen(port, () => {
   console.log(`Listening on port ${port}`);
