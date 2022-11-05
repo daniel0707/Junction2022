@@ -1,4 +1,5 @@
-const BASE_URL = 'http://localhost:3000/'
+// const BASE_URL = 'http://localhost:3000/'
+const BASE_URL = 'https://junction-hack22esp-7014.ey.r.appspot.com/'
 
 export async function getCategories() {
 

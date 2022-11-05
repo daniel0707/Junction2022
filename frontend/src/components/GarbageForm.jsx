@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet'
 
-const baseurl = "http://localhost:3000/"
+const baseurl = "https://junction-hack22esp-7014.ey.r.appspot.com/"
 
 export default function GarbageForm({ categories, onSubmit }) {
 
@@ -32,7 +32,7 @@ export default function GarbageForm({ categories, onSubmit }) {
     }
     return (
       //
-      <div className="my-1 bg-white text-black flex-row flex justify-between rounded" onClick={handleClick} style={{borderColor: selected ? '#5ef75e' : 'black', borderStyle: 'solid', borderWidth: 3+'px'}}>
+      <div className="my-1 bg-white text-black flex-row flex justify-between rounded" onClick={handleClick} style={{ borderColor: selected ? '#5ef75e' : 'black', borderStyle: 'solid', borderWidth: 3 + 'px' }}>
         <div className="flex flex-col items-start">
           <p className="text-2xl">{stationData.spot_name}</p>
           <p>{stationData.address}</p>
@@ -47,7 +47,7 @@ export default function GarbageForm({ categories, onSubmit }) {
   const [coord, updateCoord] = useState(null);
   const [address, setAddress] = useState('');
   const [selecteedCategories, setCategories] = useState('');
-  const[selecteedStation, setStation] = useState(null);
+  const [selecteedStation, setStation] = useState(null);
   const [stations, setStations] = useState([]);
   //let stations = [];
 
@@ -91,7 +91,7 @@ export default function GarbageForm({ categories, onSubmit }) {
     console.log('post')
   }
 
-  handleSubmit = () => {
+  const handleSubmit = () => {
 
   }
 
@@ -132,8 +132,8 @@ export default function GarbageForm({ categories, onSubmit }) {
         </div>
       </form>
       <button onClick={getWastePoints} className="w-2/5 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Check</button>
-    {stations.map(s => <SorttiStation key={s.id} selected={s.id === selecteedStation} handleSelect={setStation} stationData={s}/>)}
-    {selecteedStation ? <button onClick={handleSubmit}>Submit</button> : null}
+      {stations.map(s => <SorttiStation key={s.id} selected={s.id === selecteedStation} handleSelect={setStation} stationData={s} />)}
+      {selecteedStation ? <button onClick={handleSubmit}>Submit</button> : null}
     </div>
   )
 }
