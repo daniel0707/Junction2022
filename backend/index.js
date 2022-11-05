@@ -36,7 +36,7 @@ app.use(cors());
 app.use(express.json());
 
 app.get("/categories", (req, res, next) => {
-  pool.connect();
+  //pool.connect();
   pool.query("SELECT * FROM material", [], (err, result) => {
     if (err) {
       console.log(err);
@@ -63,7 +63,7 @@ app.post("/order/find", (req, res, next) => {
  )
  ORDER BY distance ASC LIMIT 5
  `;
-  pool.connect();
+  //pool.connect();
   pool.query(querystring, [], (err, result) => {
     if (err) {
       console.log(err);
@@ -201,7 +201,7 @@ const wolt_order = (body) => {
 };
 
 const get_recyclepoint_details = async (id) => {
-  pool.connect();
+  //pool.connect();
   const query_string = `SELECT * FROM recyclepoint WHERE recyclepoint.id=${id}`;
   let db_res = await pool.query(query_string)
   return db_res.rows[0]
