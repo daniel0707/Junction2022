@@ -23,6 +23,7 @@ config.ssl = {
 const pool = new Pool(config);
 
 app.use(cors());
+app.use(express.json());
 
 app.get("/categories", (req, res, next) => {
   pool.connect();
@@ -37,6 +38,31 @@ app.get("/categories", (req, res, next) => {
     }
   });
 });
+
+app.post("/order/find", (req, res, next) => {
+  const material_ids = req.body.materials;
+  const coord = req.body.coordinates;
+  const querystring = `SELECT r.id, ST_DISTANCE(r.coordinates,'SRID=4326;POINT(${coord.lng} ${coord.lat})'::geography) as distance
+  FROM recyclepoint as r
+  WHERE r.id in (
+   SELECT fk_recyclepoint FROM recyclepoint_material as rm
+   WHERE ARRAY[${material_ids.toString()}]::numeric[] <@ ( SELECT ARRAY_AGG(rm.fk_material) FROM recyclepoint_material as rm)
+ )
+ ORDER BY distance ASC LIMIT 5
+ `;
+  pool.connect();
+  pool.query(querystring, [], (err, result) => {
+    if (err) {
+      console.log(err);
+      next(err);
+    } else {
+      res.send({
+        result: result.rows,
+      });
+    }
+  });
+});
+
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
