@@ -148,7 +148,7 @@ const reverseGeocodeRequestConstructor = (coord) => {
   return `${baseGmapUrl}address=${coord.lat},${coord.lng}&key=${GMAP_TOKEN}`
 }
 
-app.get("/gmapproxy/geocode", (req, res, next) => {
+app.post("/gmapproxy/geocode", (req, res, next) => {
   const address = req.body.address;
   axios.get(geocodeRequestConstuctor(address)).then((gres)=>{
     console.log('Geocode response', gres.data.results[0].geometry.location);
@@ -159,8 +159,10 @@ app.get("/gmapproxy/geocode", (req, res, next) => {
   })
 })
 
-app.get("/gmapproxy/reversegeocode", (req, res, next) => {
+app.post("/gmapproxy/reversegeocode", (req, res, next) => {
+  console.log('Body', req.body)
   const coord = req.body.coord;
+  console.log('Coords', coord);
   axios.get(reverseGeocodeRequestConstructor(coord)).then((gres) =>{
     console.log('Reverse geolocation ', gres.data);
     const address = gres?.data?.results?.[0]?.formatted_address

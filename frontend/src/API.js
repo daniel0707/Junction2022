@@ -1,4 +1,3 @@
-
 const BASE_URL = 'http://localhost:3000/'
 
 export async function getCategories() {
@@ -6,6 +5,7 @@ export async function getCategories() {
   try {
     const response = await fetch(`${BASE_URL}` + 'categories')
     const json = await response.json()
+    console.log(json)
     return json.categories
   } catch (error) {
     console.log(error.message)

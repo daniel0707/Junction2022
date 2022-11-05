@@ -15,6 +15,7 @@ function App() {
   const [orderSuccessUrl, setOrderSuccessUrl] = useState('')
 
   useEffect(() => {
+    console.log('fetching cats')
     const getCats = async function () {
       const categories = await getCategories()
       setGarbageCategories(categories)
@@ -47,12 +48,7 @@ function App() {
 
   return (
     <div className="App bg-gray-200 w-full">
-      {formData
-        ? (<Suspense fallback={<LoadingPage />}>
-          <GarbageCenterListPage geoLoc={geoLoc} onSubmit={deliverToSelectedGarbageCenter}>{garbageCenters}</GarbageCenterListPage>
-        </Suspense>)
-        : <GarbageForm categories={garbageCategories} onSubmit={handleFormSubmit} />
-      }
+      <GarbageForm categories={garbageCategories} onSubmit={handleFormSubmit} />
     </div>
   )
 }
