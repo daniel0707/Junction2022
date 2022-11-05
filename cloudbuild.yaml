@@ -13,6 +13,7 @@ steps:
     - 'WOLT_TOKEN=${_WOLT_TOKEN}'
     - 'GMAP_TOKEN=${_GMAP_TOKEN}'
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  dir: 'backend/'
   entrypoint: 'bash'
   args: ['-c', 'gcloud config set app/cloud_build_timeout 1600 && gcloud app deploy']
   timeout: '1600s'
