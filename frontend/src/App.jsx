@@ -4,7 +4,7 @@ import './App.css'
 import GarbageForm from './components/GarbageForm'
 import LoadingPage from './components/LoadingPage'
 const GarbageCenterListPage = lazy(() => import('./components/GarbageCenterListPage.jsx'))
-import { getCategories } from './API'
+import { getCategories, postDeliveryRequest } from './API'
 
 function App() {
 
@@ -18,7 +18,7 @@ function App() {
     setGarbageCategories(categories)
   }, []) */
 
-  const [formSubmitted, setFormSubmitted] = useState(false)
+  const [formData, setFormData] = useState(null)
 
   // objects with the same fields as GarbageCenterCard (except no handleClick method)
   const [garbageCenters, setGarbageCenters] = useState([])
@@ -27,15 +27,21 @@ function App() {
   /*
   const [garbageCenters, setGarbageCenters] = useState([{ id: '1', name: 'Garbage Center X', address: 'Hell Street 666', price: '66', eta: '6 h' }, { id: '2', name: 'Garbage Center Y', address: 'Paradise Street 777', price: '77', eta: '7 h' }]) */
 
-  const handleFormSubmit = () => {
+  const handleFormSubmit = (data) => {
 
-    // TODO: add this as a prop for the GarbageForm; make the backend request; 
-    // call setGarbageCenters() with the result
+    setFormData(data)
+    console.log(data)
   }
+
+  useEffect(async () => {
+
+    const response = await postDeliveryRequest(formData)
+    setGarbageCenters(response)
+  }, [formData])
 
   return (
     <div className="App bg-gray-200 w-full">
-      {formSubmitted
+      {formData
         ? (<Suspense fallback={<LoadingPage />}>
           <GarbageCenterListPage geoLoc={geoLoc}>{garbageCenters}</GarbageCenterListPage>
         </Suspense>)
