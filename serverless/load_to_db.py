@@ -11,7 +11,7 @@ dotenv.load_dotenv("./.env")
 CONNECT_STR=os.environ["CONNECT_STR"]
 
 def getconn():
-    return psycopg2.connect('postgres://avnadmin:AVNS_HqUNPfFvM5oY698S1SN@postgres-db-service-junction-2022.aivencloud.com:17227/defaultdb?sslmode=require')
+    return psycopg2.connect(CONNECT_STR)
 def main():
     engine = create_engine('postgresql+psycopg2://',creator=getconn)
     sn = sessionmaker(engine)
