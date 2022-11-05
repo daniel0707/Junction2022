@@ -17,9 +17,13 @@ steps:
   entrypoint: 'bash'
   args: ['-c', 'gcloud config set app/cloud_build_timeout 1600 && gcloud app deploy']
   timeout: '1600s'
+
 - name: 'gcr.io/cloud-builders/docker'
+  dir: 'frontend/'
   args: ['build', '-t', 'gcr.io/$PROJECT_ID/frontend:$COMMIT_SHA']
 - name: 'gcr.io/cloud-builders/docker'
+  dir: 'frontend/'
   args: ['push', 'gcr.io/$PROJECT_ID/frontend:$COMMIT_SHA']
 - name: 'gcr.io/cloud-builders/gcloud'
+  dir: 'frontend/'
   args: ['run', 'deploy', 'frontend', '--image', 'gcr.io/$PROJECT_ID/frontend:$COMMIT_SHA', '--platform=managed', '--region=<your service region>']
