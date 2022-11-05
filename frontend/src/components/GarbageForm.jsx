@@ -167,3 +167,4 @@ export default function GarbageForm({ categories, onSubmit }) {
       </div>
     )
   }
+}
