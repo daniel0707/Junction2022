@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet'
 
-const baseurl = "http://localhost:3000/"
+const baseurl = "https://junction-hack22esp-7014.ey.r.appspot.com/"
 
 export default function GarbageForm({ categories, onSubmit }) {
 
