@@ -4,7 +4,7 @@ import './App.css'
 import GarbageForm from './components/GarbageForm'
 import LoadingPage from './components/LoadingPage'
 const GarbageCenterListPage = lazy(() => import('./components/GarbageCenterListPage.jsx'))
-import { getCategories, postDeliveryRequest } from './API'
+import { getCategories, getGarbageCenterList } from './API'
 
 function App() {
 
@@ -12,11 +12,12 @@ function App() {
 
   const [garbageCategories, setGarbageCategories] = useState(null)
 
-  /*
+  const [orderSuccessUrl, setOrderSuccessUrl] = useState(null)
+
   useEffect(async () => {
     const categories = await getCategories()
     setGarbageCategories(categories)
-  }, []) */
+  }, [])
 
   const [formData, setFormData] = useState(null)
 
@@ -33,17 +34,30 @@ function App() {
     console.log(data)
   }
 
-  useEffect(async () => {
-
-    const response = await postDeliveryRequest(formData)
-    setGarbageCenters(response)
+  useEffect(() => {
+    const requestDelivery = async function () {
+      if (formData != null) {
+        const response = await getGarbageCenterList(formData)
+        setGarbageCenters(response)
+      }
+    }
+    requestDelivery()
   }, [formData])
+
+  useEffect(() => {
+    window.location.replace(orderSuccessUrl)
+  }, [orderSuccessUrl])
+
+  const deliverToSelectedGarbageCenter = (gcId) => {
+
+
+  }
 
   return (
     <div className="App bg-gray-200 w-full">
       {formData
         ? (<Suspense fallback={<LoadingPage />}>
-          <GarbageCenterListPage geoLoc={geoLoc}>{garbageCenters}</GarbageCenterListPage>
+          <GarbageCenterListPage geoLoc={geoLoc} onSubmit={deliverToSelectedGarbageCenter}>{garbageCenters}</GarbageCenterListPage>
         </Suspense>)
         : <GarbageForm categories={garbageCategories} onSubmit={handleFormSubmit} />
       }

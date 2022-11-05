@@ -11,10 +11,20 @@ export async function getCategories() {
   }
 }
 
-export async function postDeliveryRequest(formData) {
+export async function getGarbageCenterList(formData) {
 
   try {
-    const response = await fetch(`${BASE_URL} + delivery`)
+    const response = await fetch(`${BASE_URL} + garbage_centers`)
+    return await response.json()
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export async function deliverToGarbageCenter(gcId, ourGeoLoc) {
+
+  try {
+    const response = await fetch(`${BASE_URL} + deliver`)
     return await response.json()
   } catch (error) {
     console.log(error)
