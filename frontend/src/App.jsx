@@ -12,10 +12,11 @@ function App() {
 
   const [garbageCategories, setGarbageCategories] = useState(null)
 
+  /*
   useEffect(async () => {
     const categories = await getCategories()
     setGarbageCategories(categories)
-  }, [])
+  }, []) */
 
   const [formSubmitted, setFormSubmitted] = useState(false)
 
