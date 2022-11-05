@@ -12,7 +12,7 @@ steps:
     - 'MERCHANT_ID=${_MERCHANT_ID}'
     - 'WOLT_TOKEN=${_WOLT_TOKEN}'
     - 'GMAP_TOKEN=${_GMAP_TOKEN}'
-- name: node
-  dir: 'backend/'
-  entrypoint: npm
-  args: ['run', 'start']
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: 'bash'
+  args: ['-c', 'gcloud config set app/cloud_build_timeout 1600 && gcloud app deploy']
+  timeout: '1600s'
