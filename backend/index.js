@@ -137,7 +137,7 @@ app.post("/order/submit", async (req, res, next) => {
       "count": 1,
       "description": material_name
       "identifier": material_code
-      "tags": "alcohol"
+      "tags": ["alcohol"]
     }
   ]
  }
