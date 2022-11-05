@@ -128,16 +128,16 @@ app.post("/order/submit", async (req, res, next) => {
   }
   /* 
  req.body = { 
-  dropoff:{
+  pickup:{
     formatted_adress: "Street, postcode address"
   },
-  pickup: "recyclepoint_ID"
+  dropoff: "recyclepoint_ID"
   contents:[
     {
       "count": 1,
       "description": material_name
       "identifier": material_code
-      "tags": "alcohol"
+      "tags": ["alcohol"]
     }
   ]
  }
