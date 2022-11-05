@@ -12,7 +12,6 @@ function App() {
 
   const [formData, setFormData] = useState(null)
   const [garbageCategories, setGarbageCategories] = useState([])
-  const [orderSuccessUrl, setOrderSuccessUrl] = useState('')
 
   useEffect(() => {
     console.log('fetching cats')

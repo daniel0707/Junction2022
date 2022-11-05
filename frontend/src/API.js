@@ -33,9 +33,18 @@ export async function getGarbageCenterList(data) {
 
 export async function deliverToGarbageCenter(gcId, ourGeoLoc) {
 
+  const options = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ id: gcId, geoLoc: ourGeoLoc })
+  }
+
   try {
-    const response = await fetch(`${BASE_URL}` + 'deliver')
-    return await response.json()
+    const response = await fetch(`${BASE_URL}` + 'order/submit', options)
+    const json = await response.json()
+    return json.url
   } catch (error) {
     console.log(error)
   }
