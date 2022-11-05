@@ -26,4 +26,4 @@ steps:
   args: ['push', 'gcr.io/$PROJECT_ID/frontend:$COMMIT_SHA']
 - name: 'gcr.io/cloud-builders/gcloud'
   dir: 'frontend/'
-  args: ['run', 'deploy', 'frontend', '--image', 'gcr.io/$PROJECT_ID/frontend:$COMMIT_SHA', '--platform=managed', '--region=<your service region>']
+  args: ['run', 'deploy', 'frontend', '--image', 'gcr.io/$PROJECT_ID/frontend:$COMMIT_SHA', '--platform=managed', '--region=europe-central2']
