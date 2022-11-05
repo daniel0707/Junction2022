@@ -13,9 +13,10 @@ export default function GarbageForm({ categories, onSubmit }) {
 
   const { register, handleSubmit, watch, formState: { errors } } = useForm()
 
+  /*
   const onSubmit = (data) => {
     console.log(data)
-  }
+  } */
 
   console.log(watch("example")); // watch input value by passing the name of it
 
@@ -84,7 +85,7 @@ export default function GarbageForm({ categories, onSubmit }) {
       {/* errors will return when field validation fails  */}
       {errors.exampleRequired && <span>This field is required</span>}
 
-      <button type="submit" class="w-2/5 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
+      <button type="submit" className="w-2/5 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
     </form>
   )
 }
