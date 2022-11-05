@@ -7,10 +7,12 @@ const GarbageCenterList = lazy(() => import('./components/GarbageCenterList.jsx'
 function App() {
 
   const [formSubmitted, setFormSubmitted] = useState(false)
+
+  // objects with the same fields as GarbageCenterCard (except no handleClick method)
   const [garbageCenters, setGarbageCenters] = useState([])
 
   /* For testing the GarbageCenterList; do not delete (yet)
-  const [garbageCenters, setGarbageCenters] = useState([{ name: 'Garbage Center X', address: 'Hell Street 666', price: '66', eta: '6 h', handleClick: null }]) */
+  const [garbageCenters, setGarbageCenters] = useState([{ name: 'Garbage Center X', address: 'Hell Street 666', price: '66', eta: '6 h', handleClick: null }, { name: 'Garbage Center Y', address: 'Paradise Street 777', price: '77', eta: '7 h', handleClick: null }]) */
 
   const handleFormSubmit = () => {
 
@@ -19,7 +21,7 @@ function App() {
   }
 
   return (
-    <div className="App">
+    <div className="App bg-gray-200 w-full">
       {formSubmitted
         ? (<Suspense fallback={<LoadingPage />}>
           <GarbageCenterList>{garbageCenters}</GarbageCenterList>

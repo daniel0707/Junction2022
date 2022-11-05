@@ -2,8 +2,8 @@ import GarbageCenterCard from "./GarbageCenterCard"
 
 export default function GarbageCenterList(props) {
 
-  return (<div>
-    <h1 className="text-3xl mb-12">Click on a garbage center to choose it</h1>
+  return (<div className="bg-gray-200 p-2">
+    <h1 className="text-2xl mb-8 bg-sky-200 p-4 rounded-lg m-auto mt-6 w-full text-sky-600">Click on a garbage center to select it</h1>
     {props.children.map(gc => {
       return <GarbageCenterCard
         key={gc.name}
