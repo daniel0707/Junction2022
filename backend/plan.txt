@@ -1,0 +1,58 @@
+routes:
+
+GET /catagories
+
+resp:
+{catagories:[
+    {name: str
+    id: number}
+]}
+
+
+POST /order/find
+
+body{
+    materials:[
+        material_id,
+    ]
+}
+
+resp:
+{
+    stations:[
+        {
+            location:{
+                street: str,
+                city: str,
+                postal_code: str
+                coordinates:{
+                    lat: str,
+                    lon: str
+                }
+            },
+            name: str
+        }
+    ]
+}
+// can do 404 - no centre can handle this request
+
+post /order/submit
+{
+    pickup:{
+        street:
+        city:
+        postal_code:
+    },
+    materials:[
+        {
+            code:
+            dim_h:
+            dim_w:
+            dim_l:
+            weight:
+        }
+    ],
+    dropoff:{
+        id:
+    }
+}
