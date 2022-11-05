@@ -1,12 +1,21 @@
+import { useEffect } from 'react'
 import { useState, lazy, Suspense } from 'react'
 import './App.css'
 import GarbageForm from './components/GarbageForm'
 import LoadingPage from './components/LoadingPage'
 const GarbageCenterListPage = lazy(() => import('./components/GarbageCenterListPage.jsx'))
+import { getCategories } from './API'
 
 function App() {
 
-  const geoLoc = { lat: '', lon: '' } // our location
+  const geoLoc = { lat: '60.184737', lon: '24.833727' } // our location
+
+  const [garbageCategories, setGarbageCategories] = useState(null)
+
+  useEffect(async () => {
+    const categories = await getCategories()
+    setGarbageCategories(categories)
+  }, [])
 
   const [formSubmitted, setFormSubmitted] = useState(false)
 
@@ -29,7 +38,7 @@ function App() {
         ? (<Suspense fallback={<LoadingPage />}>
           <GarbageCenterListPage geoLoc={geoLoc}>{garbageCenters}</GarbageCenterListPage>
         </Suspense>)
-        : <GarbageForm />
+        : <GarbageForm categories={garbageCategories} onSubmit={handleFormSubmit} />
       }
     </div>
   )

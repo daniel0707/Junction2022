@@ -7,7 +7,7 @@ const GARBAGE_TYPE = {
   FRIDGE: 'Fridge'
 }
 
-export default function GarbageForm() {
+export default function GarbageForm({ categories, onSubmit }) {
 
   // TODO: get garbage types from server with useEffect
 
