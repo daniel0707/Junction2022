@@ -45,7 +45,7 @@ export default function GarbageForm({ categories, onSubmit }) {
         </div>
         <div className="mt-1">
           <div className="mb-2">{`${stationData.fee.amount} ${stationData.fee.currency}`}</div>
-          <div>{`${stationData.distance.toFixed(2)} km`}</div>
+          <div>{`${(stationData.distance /1000).toFixed(2)} km`}</div>
         </div>
       </div>
     )
