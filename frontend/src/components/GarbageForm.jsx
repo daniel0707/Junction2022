@@ -30,16 +30,22 @@ export default function GarbageForm({ categories, onSubmit }) {
     const handleClick = () => {
       handleSelect(stationData.id)
     }
+
+    const borderStyle = selected ? 'border-sky-400' : 'border-gray-400'
+    const infoBallStyle = selected ? 'bg-sky-400' : 'bg-gray-400'
+
     return (
-      //
-      <div className="my-1 bg-white text-black flex-row flex justify-between rounded" onClick={handleClick} style={{borderColor: selected ? '#5ef75e' : 'black', borderStyle: 'solid', borderWidth: 3+'px'}}>
-        <div className="flex flex-col items-start">
-          <p className="text-2xl">{stationData.spot_name}</p>
-          <p>{stationData.address}</p>
+      <div className={`my-1 mt-4 bg-white text-black flex-row flex justify-between rounded-lg border-4 p-3 ${borderStyle}`} onClick={handleClick}>
+        <div className="flex flex-col">
+          <div className="flex flew-row place-items-center">
+            <div className={`rounded-full w-4 h-4 mr-2 ${infoBallStyle}`}></div>
+            <p className="mb-2 text-xl pt-2">{stationData.spot_name}</p>
+          </div>
+          <p className="text-start ml-6">{stationData.address}</p>
         </div>
-        <div>
-          <div>{`${stationData.fee.amount} ${stationData.fee.currency}`}</div>
-          <div>{`${stationData.distance.toFixed(2)}km`}</div>
+        <div className="mt-1">
+          <div className="mb-2">{`${stationData.fee.amount} ${stationData.fee.currency}`}</div>
+          <div>{`${stationData.distance.toFixed(2)} km`}</div>
         </div>
       </div>
     )
@@ -49,7 +55,7 @@ export default function GarbageForm({ categories, onSubmit }) {
   const [address, setAddress] = useState('');
   const [selecteedCategories, setCategories] = useState('');
   const [description, setDescription] = useState('');
-  const[selecteedStation, setStation] = useState(null);
+  const [selecteedStation, setStation] = useState(null);
   const [stations, setStations] = useState([]);
   //let stations = [];
 
@@ -106,11 +112,11 @@ export default function GarbageForm({ categories, onSubmit }) {
       body: JSON.stringify({
         dropoff: selecteedStation,
         pickup: {
-          location:{
+          location: {
             formatted_address: address
           }
         },
-        contents:[
+        contents: [
           {
             count: 1,
             description: description,
@@ -165,8 +171,8 @@ export default function GarbageForm({ categories, onSubmit }) {
         </div>
       </form>
       <button onClick={getWastePoints} className="w-2/5 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Check</button>
-    {stations.map(s => <SorttiStation key={s.id} selected={s.id === selecteedStation} handleSelect={setStation} stationData={s}/>)}
-    {selecteedStation ? <button onClick={handleSubmit}>Submit</button> : null}
+      {stations.map(s => <SorttiStation key={s.id} selected={s.id === selecteedStation} handleSelect={setStation} stationData={s} />)}
+      {selecteedStation ? <button className="mt-4" onClick={handleSubmit}>Submit</button> : null}
     </div>
   )
 }
